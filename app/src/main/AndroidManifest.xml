@@ -49,14 +49,22 @@
         </activity>
         <activity android:name=".MainScreenActivity" />
         <activity android:name=".IntermediateActivity" />
-        <activity android:name=".NewActivity" />
-        <activity android:name=".SyllabusActivity" />
-        <activity android:name=".IntroActivity" />
-        <activity android:name=".PreviousYearActivity" />
-        <activity android:name=".BooksActivity" />
-        <activity android:name=".Paper1" />
-        <activity android:name=".Paper2" />
-        <activity android:name=".Paper3" />
+        <activity android:name=".NewActivity"
+            android:label="Question Sets"/>
+        <activity android:name=".SyllabusActivity"
+            android:label="Syllabus"/>
+        <activity android:name=".IntroActivity"
+            android:label="Introduction"/>
+        <activity android:name=".PreviousYearActivity"
+            android:label="Question Sets"/>
+        <activity android:name=".BooksActivity"
+            android:label="Notes/Books"/>
+        <activity android:name=".Paper1"
+            android:label="CRMO"/>
+        <activity android:name=".Paper2"
+            android:label="INMO"/>
+        <activity android:name=".Paper3"
+            android:label="RMO"/>
     </application>
 
 </manifest>

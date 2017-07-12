@@ -132,7 +132,7 @@ public class StorageHelperActivity extends AppCompatActivity {
                             progressDialog.setMessage("Downloaded : "+(int)progress+"%");
                         }
                     });
-                    //private void onProgress(FileDownloadTask.TaskSnapshot tasksnapshot){}
+
 
 
 
@@ -157,13 +157,26 @@ public class StorageHelperActivity extends AppCompatActivity {
 //
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
-    {
-//
+    { boolean newstatus=false;
+        try{  Uri   uritest = intent.getData();
+         }catch(Exception e){
+        newstatus=true;
 
-        if (requestCode == UploadFromSelectApp)
+    }
+
+        if(newstatus){
+            finish();
+        }else
+            if (requestCode == UploadFromSelectApp )
         {
             Toast.makeText(getApplicationContext(), "Upload file  selected app...", Toast.LENGTH_SHORT).show();
-            final Uri uri = intent.getData();
+            Uri uri=Uri.EMPTY;
+         try{     uri = intent.getData();
+           }catch(Exception e){
+             startActivity(new Intent(getApplicationContext(),PreviousYearActivity.class));
+             finish();
+         }
+
             //Generating a unique name:
             String name = uri.getLastPathSegment();//Getting the file name
             String onlyname="Default",extension="";
@@ -179,12 +192,12 @@ try{             onlyname = name.substring(0, name.lastIndexOf("."));          /
             //Concatenating all the strings to a single entity
             String finalname = onlyname + timestamp + extension;
 
-            try {final ProgressDialog progressDialog = new ProgressDialog(this);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setTitle("Uploading...");
                 progressDialog.show();
                 StorageReference storageReferenceRoot = FirebaseStorage.getInstance().getReferenceFromUrl(pathtofirebaseupload);
                 StorageReference storageReference=storageReferenceRoot.child(finalname);
-                storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+               try{ storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         progressDialog.dismiss();
@@ -203,13 +216,14 @@ try{             onlyname = name.substring(0, name.lastIndexOf("."));          /
                         progressDialog.setMessage("Uploaded : "+ (int)progress+"%");
                     }
                 });
+               }  catch (Exception e) {
+                 Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+
+               }
 
 
 
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
 
-            }
 
         }
 

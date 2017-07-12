@@ -4,19 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bckgnd1"
+    android:background="@drawable/rowbg"
+
     tools:context="com.example.rish.androidapp.BooksActivity">
 
 
 
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="In Beta.."
-    android:textSize="50sp"
-    android:textColor="#FFD700"
+
 
     android:layout_centerHorizontal="true" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:id="@+id/theListView"
+        />
 
 </RelativeLayout>

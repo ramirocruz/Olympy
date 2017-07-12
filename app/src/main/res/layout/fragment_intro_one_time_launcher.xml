@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="A dream doesn't become reality\n though magic; it takes sweat,\n determination and hard work.\n\n ~Collin Powell"
+        android:text="A dream doesn't become reality\n through magic; it takes sweat,\n determination and hard work.\n\n ~Collin Powell"
         android:textStyle="bold|italic"
         android:textSize="20sp"
         android:textColor="#FFFF"
