@@ -4,16 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rowbg"
-    tools:context="com.example.rish.androidapp.ProfileActivity">
+    android:background="@drawable/bckgnd"
+    tools:context="com.example.rish.androidapp.PreviousYearActivity">
 
+    <Button
+        android:id="@+id/buttonquestionpapersonline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFD700"
+        android:text="CRMO"
+        android:textSize="24dp"
+        android:onClick="click1"
+        android:textStyle="bold|italic"
+        android:layout_marginBottom="34dp"
+        android:layout_above="@+id/buttondownloadedpapers"
+        android:layout_alignStart="@+id/button3" />
 
-    <ListView
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_alignParentStart="true"
-             android:id="@+id/theListView"
-              />
+    <Button
+        android:id="@+id/buttondownloadedpapers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFD700"
+        android:text="INMO"
+        android:textSize="24dp"
+        android:textStyle="bold|italic"
+        android:onClick="click2"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFD700"
+        android:text="RMO"
+        android:textSize="24dp"
+        android:textStyle="bold|italic"
+        android:onClick="click3"
+        android:layout_below="@+id/buttondownloadedpapers"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="35dp" />
+
 
 
 </RelativeLayout>

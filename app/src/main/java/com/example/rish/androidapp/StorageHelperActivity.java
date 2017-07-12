@@ -1,8 +1,10 @@
 package com.example.rish.androidapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,9 +32,9 @@ import java.text.SimpleDateFormat;
 
 public class StorageHelperActivity extends AppCompatActivity {
     static final int UploadFromSelectApp = 9501;
-    static final int UploadFromFilemanager = 9502;
-    final String pathtofirebaseroot = "gs://androidapp-6745a.appspot.com/";
+
     final String pathtofirebase = "gs://androidapp-6745a.appspot.com/MathsOlympiad/";
+
 
     final String pathtofirebaseupload = "gs://androidapp-6745a.appspot.com/MathsOlympiadUpload/";
     private static String downloaddirpath = "/storage/emulated/0/Olympy/";
@@ -41,6 +43,8 @@ public class StorageHelperActivity extends AppCompatActivity {
     private String extention = ".pdf";
     public static File dir = new File(downloaddirpath);
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,7 +52,7 @@ public class StorageHelperActivity extends AppCompatActivity {
         setContentView(R.layout.activity_storage_helper);
         name=getIntent().getStringExtra("Name");
         status=getIntent().getBooleanExtra("Status",false);
-        String path=pathtofirebase+name+extention;
+        String path=name+extention;
       if(isNetworkAvaliable(getApplicationContext())) {
             if (!status) {
 
@@ -75,12 +79,13 @@ public class StorageHelperActivity extends AppCompatActivity {
 
     private void DownloadFromFirebaseFromPath(final String downloadPathTo,final String downloadPathFrom) {
 
-
+                final String DownloadPathRoot = pathtofirebase;
 
                 dir.mkdirs();
                 final String DownloadPathTo = downloadPathTo;
                 final String DownloadPathFrom = downloadPathFrom;
-                final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(DownloadPathFrom);
+                StorageReference storageReferenceroot = FirebaseStorage.getInstance().getReferenceFromUrl(DownloadPathRoot);
+                StorageReference storageReference=storageReferenceroot.child(downloadPathFrom);
 
 
                 Toast.makeText(getApplicationContext(), "Download file ...", Toast.LENGTH_SHORT).show();
@@ -102,18 +107,34 @@ public class StorageHelperActivity extends AppCompatActivity {
                     if (flag[0] == 0)
                         file.delete();
                 }
-                try {
+                try {final ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle("Downloading...");
+                    progressDialog.show();
+
                     storageReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+
                             Toast.makeText(getApplicationContext(), "Download completed", Toast.LENGTH_SHORT).show();
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "Download Failure : " + e.toString(), Toast.LENGTH_SHORT).show();
                         }
+                    }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests") double progress=(100*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                            progressDialog.setMessage("Downloaded : "+(int)progress+"%");
+                        }
                     });
+                    //private void onProgress(FileDownloadTask.TaskSnapshot tasksnapshot){}
+
+
 
 
                 } catch (Exception e) {
@@ -133,40 +154,11 @@ public class StorageHelperActivity extends AppCompatActivity {
        }
     }
 //
-//    private void UploadToFirebaseFromFilemanager (String uploadName)
-//    {
-//        String UploadName = uploadName;
-//        Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-//        intent.putExtra("CONTENT_TYPE", "*/*");
-//        intent.addCategory(Intent.CATEGORY_DEFAULT);
-//        startActivityForResult(intent, UploadFromFilemanager);
-//    }
+//
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-//        if (requestCode == UploadFromFilemanager)
-//        {
-//            final Uri currFileURI = intent.getData();
-//             Toast.makeText(getApplicationContext(),currFileURI.toString()+"  "+currFileURI.getLastPathSegment().toString(),Toast.LENGTH_LONG).show();
-//            try{
-//                Toast.makeText(getApplicationContext(), "Upload file ...", Toast.LENGTH_SHORT).show();
-//                Toast.makeText(getApplicationContext(),currFileURI.toString()+"  "+currFileURI.getLastPathSegment().toString(),Toast.LENGTH_LONG).show();
-//                String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-//                StorageReference storageReference = FirebaseStorage.getInstance().getReference(pathtofirebaseupload+currFileURI.getLastPathSegment());
-//                storageReference.putFile(currFileURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(getApplicationContext(), "File successfully uploaded..", Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getApplicationContext(), "Uploading Failed..", Toast.LENGTH_SHORT).show();
-//                    }
-//                });}catch(Exception e){
-//                Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_SHORT).show();
-//            }
-//        }
+//
 
         if (requestCode == UploadFromSelectApp)
         {
@@ -174,7 +166,7 @@ public class StorageHelperActivity extends AppCompatActivity {
             final Uri uri = intent.getData();
             //Generating a unique name:
             String name = uri.getLastPathSegment();//Getting the file name
-            String onlyname="",extension="";
+            String onlyname="Default",extension="";
 try{             onlyname = name.substring(0, name.lastIndexOf("."));          //Getting the file name without extension
              extension = name.substring(name.lastIndexOf("."));                //Getting the rest of the file name
               }catch (Exception e){
@@ -187,24 +179,31 @@ try{             onlyname = name.substring(0, name.lastIndexOf("."));          /
             //Concatenating all the strings to a single entity
             String finalname = onlyname + timestamp + extension;
 
-            try {
-                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(pathtofirebaseupload + finalname);
+            try {final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle("Uploading...");
+                progressDialog.show();
+                StorageReference storageReferenceRoot = FirebaseStorage.getInstance().getReferenceFromUrl(pathtofirebaseupload);
+                StorageReference storageReference=storageReferenceRoot.child(finalname);
                 storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "File successfully uploaded..", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "Uploading Failed..", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        //TODO
+                        @SuppressWarnings("VisibleForTests") double progress=(100*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                        progressDialog.setMessage("Uploaded : "+ (int)progress+"%");
                     }
                 });
+
 
 
             } catch (Exception e) {

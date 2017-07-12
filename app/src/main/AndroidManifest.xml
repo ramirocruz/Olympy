@@ -27,8 +27,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Olympy Web Viewer"
             android:theme="@style/Full_Screen" />
-        <activity android:name=".PdfViewerActivity"
-            android:theme="@style/Full_Screen"/>
+        <activity
+            android:name=".PdfViewerActivity"
+            android:theme="@style/Full_Screen" />
         <activity android:name=".StorageHelperActivity" />
         <activity
             android:name=".DownloadListView"
@@ -37,7 +38,8 @@
             android:name=".IntroOneTimeLauncherActivity"
             android:label="@string/title_activity_intro_one_time_launcher"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SplashScreenActivity"
+        <activity
+            android:name=".SplashScreenActivity"
             android:theme="@style/Full_Screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +53,10 @@
         <activity android:name=".SyllabusActivity" />
         <activity android:name=".IntroActivity" />
         <activity android:name=".PreviousYearActivity" />
-        <activity android:name=".BooksActivity"></activity>
+        <activity android:name=".BooksActivity" />
+        <activity android:name=".Paper1" />
+        <activity android:name=".Paper2" />
+        <activity android:name=".Paper3" />
     </application>
 
 </manifest>
